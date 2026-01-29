@@ -1,4 +1,3 @@
-import pytest
 import os
 import winsound
 
@@ -18,8 +17,9 @@ def mostrar_tablero(n, movimientos_jugadores):
                         casilla_vacia= False
             if casilla_vacia:
                 print('_ ',end='')
-        print('\n')
+        print('\n')	
 
+import pytest
 from juego_3_en_raya import mostrar_tablero
 
 @pytest.fixture
@@ -66,6 +66,11 @@ def movimientos_ocupados():
 def movimientos_fuera_tablero(tablero_dimension):
     return tablero_dimension + 1, tablero_dimension + 1
 
+def test_movimiento_fila_fuera_tablero(tablero_dimension, movimientos_vacios):
+    movimientos_otro_jugador, _ = movimientos_vacios
+    y = tablero_dimension + 1
+    x = 1
+    assert not movimiento_valido(tablero_dimension, x, y, movimientos_otro_jugador)
 
 def test_movimiento_columna_fuera_tablero(tablero_dimension, movimientos_vacios):
     movimientos_otro_jugador, _ = movimientos_vacios
@@ -73,11 +78,6 @@ def test_movimiento_columna_fuera_tablero(tablero_dimension, movimientos_vacios)
     y = tablero_dimension + 1
     assert not movimiento_valido(tablero_dimension, x, y, movimientos_otro_jugador)
 
-def test_movimiento_fila_fuera_tablero(tablero_dimension, movimientos_vacios):
-    movimientos_otro_jugador, _ = movimientos_vacios
-    y = 1
-    x = tablero_dimension + 1
-    assert not movimiento_valido(tablero_dimension, x, y, movimientos_otro_jugador)
 
 def test_movimiento_fila_y_columna_fuera_tablero(tablero_dimension, movimientos_vacios, movimientos_fuera_tablero):
     movimientos_otro_jugador, _ = movimientos_vacios
@@ -112,7 +112,6 @@ def test_no_ganador(movimientos_no_ganador):
 def test_ganador(movimientos_ganador):
     assert jugada_ganadora(movimientos_ganador)
 
-
 if __name__ == "__main__":
     #Pedimos el tamaño del tablero en que se va a realizar el juego
     n=int(input('Introduce el tamaño del tablero cuadrado:'))
@@ -139,7 +138,7 @@ if __name__ == "__main__":
 
         movimientos_jugador_activo= movimientos_jugadores[jugador_activo]
         movimientos_otro_jugador = movimientos_jugadores[(jugador_activo+1)%2]
-        if movimiento_valido(x,y, movimientos_otro_jugador):
+        if movimiento_valido(n, x , y, movimientos_otro_jugador):
             mov_col= movimientos_jugador_activo.get(x,[])
             mov_col.append(y)
             movimientos_jugador_activo[x]= mov_col
